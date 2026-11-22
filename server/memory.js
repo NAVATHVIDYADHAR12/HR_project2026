@@ -182,7 +182,7 @@ export function parseBlock(block, { knownNames = [], knownCompanies = [], today 
   else if (f.pan) f.pan = f.pan.toUpperCase().replace(/\s/g, '')
 
   // Leaving clause first, so its "due to" isn't taken as the rejection reason.
-  const left = text.match(/\b(?:left|resigned\s+from|quit|relieved\s+from)\s+(?:from\s+)?([A-Z][\w&.]*(?:\s+[A-Z][\w&.]*){0,3}?)?\s*(?:(?:in|on|by)\s+([A-Za-z]{3,9}\.?\s+\d{4}|\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}))?\s*(?:,?\s*(?:due\s+to|because(?:\s+of)?|for|as)\s+([^.;\n]+?))?(?=[.;\n]|,\s*(?:notice|ctc|current|expected|lives|based|location|job|dob|pan|qualification|email|phone)|$)/i)
+  const left = text.match(/\b(?:left|resigned\s+from|quit|relieved\s+from)\s+(?:from\s+)?((?!(?:due|because|for|as|in|on|by|the|my|his|her)\b)[A-Z][\w&.]*(?:\s+[A-Z][\w&.]*){0,3}?)?\s*(?:(?:in|on|by)\s+([A-Za-z]{3,9}\.?\s+\d{4}|\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}|\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}))?\s*(?:,?\s*(?:due\s+to|because(?:\s+of)?|for|as)\s+([^.;\n]+?))?(?=[.;\n]|,\s*(?:notice|ctc|current|expected|lives|based|location|job|dob|pan|qualification|email|phone)|$)/i)
   if (left && (left[1] || left[2] || left[3])) {
     if (left[1] && !f.previousCompany) f.previousCompany = clean(left[1])
     if (left[2] && !f.leavingDate) f.leavingDate = left[2]

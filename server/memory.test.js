@@ -105,3 +105,12 @@ test('helpers', () => {
   assert.equal(noticeDays('Immediate joiner'), 0)
   assert.equal(noticeDays('serving notice'), 15)
 })
+
+test('"left for better growth" is a reason, not a company', () => {
+  const [c] = parseNote('Kiran Kumar selected for Infosys. Previous company HCL, left for better growth, location Hyderabad')
+  assert.equal(c.fields.previousCompany, 'HCL')
+  assert.equal(c.fields.leavingReason, 'better growth')
+  const [d] = parseNote('Ravi on hold, left TCS for better pay')
+  assert.equal(d.fields.previousCompany, 'TCS')
+  assert.equal(d.fields.leavingReason, 'better pay')
+})
