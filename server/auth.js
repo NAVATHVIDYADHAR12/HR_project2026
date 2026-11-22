@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto'
+import { randomBytes, scryptSync, timingSafeEqual, createHash, createHmac } from 'node:crypto'
 import { db } from './db.js'
 
 // Accounts + sessions. Passwords: scrypt with a per-user salt. Sessions: random token in an HttpOnly cookie,
@@ -55,7 +55,30 @@ export function login({ email, password }, now = Date.now()) {
   return { user: publicUser(u.id), token: newSession(u.id) }
 }
 
+// Hosted demo (Vercel): server copies come and go, each with its own temporary database, so a session stored in
+// one is unknown to the next and people get logged out at random. There the token itself is signed instead.
+export const HOSTED = process.env.TD_DEMO === '1' || (!!process.env.VERCEL && process.env.TD_DEMO !== '0')
+// shortcut: without TD_SECRET the key is per server copy (sessions then last only as long as that copy); set it on Vercel.
+const SECRET = process.env.TD_SECRET || randomBytes(32).toString('hex')
+const sign = (s) => createHmac('sha256', SECRET).update(s).digest('base64url')
+function signedToken(userId) {
+  const { email } = db.prepare('SELECT email FROM users WHERE id = ?').get(userId)
+  const body = Buffer.from(JSON.stringify({ e: email, x: Date.now() + SESSION_DAYS * DAY })).toString('base64url')
+  return `v1.${body}.${sign(body)}`
+}
+function signedUser(token) {
+  const [, body, sig] = token.split('.')
+  if (!body || !sig) return null
+  const good = Buffer.from(sign(body)), got = Buffer.from(sig)
+  if (good.length !== got.length || !timingSafeEqual(good, got)) return null
+  const { e, x } = JSON.parse(Buffer.from(body, 'base64url').toString())
+  if (!(x > Date.now())) return null
+  const u = db.prepare('SELECT id FROM users WHERE email = ?').get(e)
+  return u ? publicUser(u.id) : null
+}
+
 function newSession(userId) {
+  if (HOSTED) return signedToken(userId)
   const token = randomBytes(32).toString('base64url')
   db.prepare('DELETE FROM sessions WHERE expiresAt < ?').run(new Date().toISOString())
   db.prepare('INSERT INTO sessions (tokenHash, userId, expiresAt) VALUES (?, ?, ?)').run(sha(token), userId, new Date(Date.now() + SESSION_DAYS * DAY).toISOString())
@@ -63,6 +86,7 @@ function newSession(userId) {
 }
 export function userForToken(token) {
   if (!token) return null
+  if (HOSTED && token.startsWith('v1.')) return signedUser(token)
   const s = db.prepare('SELECT userId, expiresAt FROM sessions WHERE tokenHash = ?').get(sha(token))
   if (!s || s.expiresAt < new Date().toISOString()) return null
   return publicUser(s.userId)
@@ -93,5 +117,6 @@ export function readCookie(header, name = COOKIE) {
   }
   return ''
 }
-export const sessionCookie = (token) => `${COOKIE}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_DAYS * 86400}`
+const SECURE = process.env.VERCEL ? '; Secure' : '' // https only on the hosted site
+export const sessionCookie = (token) => `${COOKIE}=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${SESSION_DAYS * 86400}${SECURE}`
 export const clearCookie = () => `${COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`

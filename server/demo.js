@@ -1,11 +1,11 @@
-import { signup, hasUsers } from './auth.js'
+import { signup, hasUsers, HOSTED } from './auth.js'
 import { save as saveCandidates } from './candidates.js'
 import { upsertGroups, parseGroupLines } from './linkedin.js'
 import { saveTemplate } from './mail.js'
 
 // Hosted demo (TD_DEMO=1, e.g. on Vercel): an empty database gets a demo login and made-up sample data.
 // Never real candidates: the public site must not hold PAN numbers or phone numbers of real people.
-export const DEMO = process.env.TD_DEMO === '1' || (!!process.env.VERCEL && process.env.TD_DEMO !== '0')
+export const DEMO = HOSTED
 export const DEMO_LOGIN = { email: 'demo@talentdesk.app', password: 'TalentDesk#Demo1' }
 
 const PEOPLE = [
