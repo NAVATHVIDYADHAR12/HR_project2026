@@ -1,0 +1,11 @@
+node_modules/
+.next/
+dist/
+next-env.d.ts
+.vercel/
+.env*
+*.log
+# Candidate data (names, phones, PAN) stays on this machine only
+data/
+# local tool caches
+.impeccable/

@@ -1,0 +1,3 @@
+Karthik Reddy
+karthik.r@gmail.com, 08123456789
+Java developer, 3 years. Core Java, Spring, Hibernate, SQL. Exploring AWS.

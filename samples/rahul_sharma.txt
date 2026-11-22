@@ -1,0 +1,4 @@
+Rahul Sharma
+rahul.sharma@gmail.com | +91 98765 43210 | Hyderabad
+Senior Java Developer with 6 years of experience in banking and fintech.
+Skills: Java, Spring Boot, Microservices, RESTful services, Kafka, AWS (EC2, S3), MySQL, SQL, Docker, Kubernetes, Jenkins

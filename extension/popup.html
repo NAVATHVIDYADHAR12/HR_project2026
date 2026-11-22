@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <span class="mark">T</span>
+    <div><h1>TalentDesk Sourcer</h1><p id="site" class="muted">Open a job-board search page</p></div>
+  </header>
+
+  <section id="keybox" hidden>
+    <label for="tdkey">TalentDesk key</label>
+    <input id="tdkey" placeholder="tdx_… (TalentDesk → Settings → Extension key)" autocomplete="off" spellcheck="false" />
+    <p class="muted small">Paste it once. It lets the extension talk to your TalentDesk app.</p>
+  </section>
+
+  <section id="li" hidden>
+    <button id="groups" class="ghost wide">Send LinkedIn groups on this page to TalentDesk</button>
+    <p class="muted small">Works on LinkedIn group search results and your "My groups" page. Reads the list only; it never joins or posts.</p>
+  </section>
+
+  <section id="setup">
+    <label for="jd">Job title or JD</label>
+    <textarea id="jd" rows="4" placeholder="e.g. Senior Java Developer, or paste the full JD"></textarea>
+
+    <label for="skills">Must-have skills <span class="muted">(comma separated, add as many as you need)</span></label>
+    <input id="skills" placeholder="java, spring boot, kafka, aws" />
+
+    <div class="grid">
+      <label>Min exp (yrs)<input id="minYears" type="number" min="0" max="40" step="0.5" /></label>
+      <label>Max exp (yrs)<input id="maxYears" type="number" min="0" max="40" step="0.5" /></label>
+      <label>Max salary (LPA)<input id="maxSalary" type="number" min="0" step="0.5" /></label>
+      <label>Max notice (days)<input id="maxNotice" type="number" min="0" max="180" /></label>
+      <label>Active within (days)<input id="activeWithin" type="number" min="0" max="365" /></label>
+      <label class="check"><input id="immediateOnly" type="checkbox" /> Immediate joiners only</label>
+    </div>
+    <label class="check strict"><input id="strict" type="checkbox" checked /> Strict: reject if any requirement is missing or not shown</label>
+
+    <button id="scan" class="cta">Start screening</button>
+    <div class="row">
+      <button id="pick" class="ghost">Pick a card</button>
+      <button id="clear" class="ghost">Clear marks</button>
+    </div>
+    <p id="layout" class="muted small"></p>
+  </section>
+
+  <p id="msg" role="status"></p>
+
+  <section id="out" hidden>
+    <div class="out-head">
+      <h2 id="summary"></h2>
+      <button id="copy" class="ghost small">Copy names</button>
+    </div>
+    <ol id="list"></ol>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>

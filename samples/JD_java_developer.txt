@@ -1,0 +1,5 @@
+Senior Java Developer, Hyderabad (Hybrid)
+Experience: 4-7 years
+Must have: Java, Spring Boot, Microservices, REST API, Kafka, AWS, SQL, Docker
+Good to have: Kubernetes, Jenkins
+Banking or fintech domain preferred. Notice period: immediate to 30 days.
