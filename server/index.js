@@ -553,5 +553,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   // This computer only: candidate data (incl. PAN) must not be reachable from the office network.
   const PORT = process.env.PORT || 5174
   const HOST = process.env.HOST || '127.0.0.1'
-  app.listen(PORT, HOST, () => console.log(`TalentDesk API on http://localhost:${PORT}`))
+  app.listen(PORT, HOST, () => console.log(`TalentDesk API on http://127.0.0.1:${PORT}`))
 }

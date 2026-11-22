@@ -10,9 +10,9 @@ if not exist node_modules (
 echo Building the app...
 call npx next build || (echo Build failed. & pause & exit /b 1)
 REM Open the browser a moment after the server starts.
-start "" /b cmd /c "timeout /t 2 /nobreak >nul & start "" http://localhost:5174"
+start "" /b cmd /c "timeout /t 2 /nobreak >nul & start "" http://127.0.0.1:5174"
 echo.
-echo TalentDesk is running at http://localhost:5174
+echo TalentDesk is running at http://127.0.0.1:5174
 echo Keep this window open. Close it to stop TalentDesk.
 echo.
 call npx next start -p 5174 -H 127.0.0.1

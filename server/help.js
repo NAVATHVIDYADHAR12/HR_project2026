@@ -25,7 +25,7 @@ export const GUIDE = [
   { page: 'settings', k: 'backup restore data export database copy', a: 'Settings → Your data → Download backup saves everything in one file. To restore, close TalentDesk, rename data/talentdesk.db, put the backup in its place with that name, then start TalentDesk again.' },
   { page: null, k: 'password forgot reset login sign in account', a: 'Forgot your password? In the TalentDesk folder, run: npm run reset-password your@email. It prints a temporary password.' },
   { page: null, k: 'private privacy safe data where stored security network', a: 'Everything stays on this computer in data/talentdesk.db. The app only answers this computer, not the office network, and other websites can’t reach it. Only what you choose goes to your AI provider.' },
-  { page: null, k: 'start run open launch install', a: 'Double-click "Start TalentDesk.bat" in the project folder. It opens http://localhost:5174. Keep its window open while you work.' },
+  { page: null, k: 'start run open launch install', a: 'Double-click "Start TalentDesk.bat" in the project folder. It opens http://127.0.0.1:5174. Keep its window open while you work.' },
   { page: null, k: 'dark mode light theme day night switch', a: 'Use the day/night switch at the bottom of the sidebar, or at the top of the home page.' },
 ]
 

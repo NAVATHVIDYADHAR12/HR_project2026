@@ -19,7 +19,7 @@ Each server instance keeps its own temporary database, so demo changes can reset
 
 ```
 npm install
-npm run dev        # http://localhost:5174
+npm run dev        # http://127.0.0.1:5174 (use 127.0.0.1, not localhost: on Windows "localhost" tries IPv6 first and adds ~0.3 s per connection)
 npm test           # API tests (node:test)
 ```
 

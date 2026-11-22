@@ -194,13 +194,13 @@ F1 ✅ → F5 ✅ → F2 ✅ → F6 ✅ → F7 ✅ → F8 ✅ → F10 ✅ → F3
 - 2026-11-22: **F9 done.** 73 tests pass (incl. end-to-end), production build OK, browser sweep clean. Fixed: server reachable from the office network; other websites able to call the API; unknown API routes returning HTML; a broken page blanking the whole app.
 
 ## How to run
-**Everyday use (Windows):** double-click **`Start TalentDesk.bat`**. It installs on first run, builds, and opens http://localhost:5174. Keep its window open; close it to stop.
+**Everyday use (Windows):** double-click **`Start TalentDesk.bat`**. It installs on first run, builds, and opens http://127.0.0.1:5174. Keep its window open; close it to stop.
 
 **Development:**
 ```
 npm install
 npm run dev        # http://localhost:5173 (hot reload)
 npm test           # all 73 tests, incl. end-to-end
-npm start          # build + serve on http://localhost:5174
+npm start          # build + serve on http://127.0.0.1:5174
 ```
 Data lives in `data/talentdesk.db` (excluded from git). Back it up from Settings → Your data.
