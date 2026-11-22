@@ -61,9 +61,12 @@ app.get('/api/auth/me', (req, res) => {
 })
 // LinkedIn OAuth callback: public (LinkedIn redirects here), protected by the one-time state from /start.
 const LI_REDIRECT = `http://localhost:${process.env.PORT || 5174}/api/linkedin/oauth/callback`
-const safeReturn = (u) => (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(u || '') ? u : `http://localhost:${process.env.PORT || 5174}`)
+// On the hosted site LinkedIn must return to that site, not to localhost.
+const liRedirect = (req) => (process.env.VERCEL ? `https://${req.headers.host}/api/linkedin/oauth/callback` : LI_REDIRECT)
+// Hosted: '' makes the redirect relative (back to the same site).
+const safeReturn = (u) => (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(u || '') ? u : process.env.VERCEL ? '' : `http://localhost:${process.env.PORT || 5174}`)
 app.get('/api/linkedin/oauth/callback', async (req, res) => {
-  try { res.redirect(`${safeReturn(await liApi.liCallback(req.query, LI_REDIRECT))}/app#linkedin`) }
+  try { res.redirect(`${safeReturn(await liApi.liCallback(req.query, liRedirect(req)))}/app#linkedin`) }
   catch (e) { res.redirect(`${safeReturn(e.returnTo)}/app?li_error=${encodeURIComponent(e.message)}#linkedin`) }
 })
 
@@ -224,10 +227,10 @@ app.post('/api/linkedin/undo', (req, res) => res.json({ usage: li.undoPosted(Num
 app.post('/api/linkedin/limit', (req, res) => res.json({ usage: li.setLimit(req.body.limit) }))
 
 // LinkedIn API: connect (OAuth) and post to the member's own feed.
-app.get('/api/linkedin/api', (_, res) => res.json(liApi.liStatus(LI_REDIRECT)))
-app.post('/api/linkedin/api/config', (req, res) => { liApi.liConfig(req.body); res.json(liApi.liStatus(LI_REDIRECT)) })
-app.post('/api/linkedin/api/start', (req, res) => res.json({ url: liApi.liAuthUrl(LI_REDIRECT, safeReturn(req.body.returnTo)) }))
-app.post('/api/linkedin/api/disconnect', (_, res) => { liApi.liDisconnect(); res.json(liApi.liStatus(LI_REDIRECT)) })
+app.get('/api/linkedin/api', (req, res) => res.json(liApi.liStatus(liRedirect(req))))
+app.post('/api/linkedin/api/config', (req, res) => { liApi.liConfig(req.body); res.json(liApi.liStatus(liRedirect(req))) })
+app.post('/api/linkedin/api/start', (req, res) => res.json({ url: liApi.liAuthUrl(liRedirect(req), safeReturn(req.body.returnTo)) }))
+app.post('/api/linkedin/api/disconnect', (req, res) => { liApi.liDisconnect(); res.json(liApi.liStatus(liRedirect(req))) })
 app.post('/api/linkedin/api/post', async (req, res) => {
   if (req.body.confirm !== true) return res.status(400).json({ error: 'Posting needs your confirmation.' })
   res.json(await liApi.liPost(String(req.body.text || '').slice(0, 3000), req.body.image || null))
